@@ -1,20 +1,21 @@
-const express = require('express')
-const app = express()
-require('dotenv/config')
-const port = 3002 || process.env.port
-const mongoose = require('mongoose')
-const authRouter = require('./routes/authRouter')
-const userRouter = require('./routes/userRouter')
+const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+require("dotenv/config");
 
-app.use(express.urlencoded({extended : false}))
+const port = process.env.port || 3002;
 
-app.use('/users', authRouter)
-app.use('/', userRouter)
+const authRouter = require("./routes/authRouter");
+const userRouter = require("./routes/userRouter");
 
+app.use(express.urlencoded({ extended: false }));
 
+app.use("/users", authRouter);
+app.use("/", userRouter);
 
+mongoose.connect(process.env.MONGO_DB, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-mongoose.connect(process.env.MONGO_DB, { useNewUrlParser: true, useUnifiedTopology: true })
-
-
-app.listen(port, console.log('Server connected'))
+app.listen(port, console.log(`Server connected at port ${port}`));
