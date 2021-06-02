@@ -9,14 +9,25 @@ authRouter.post("/register", async (req, res) => {
     return res.status(400).send("Email already exist");
   }
 
+  const user = new User({
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+  });
+
+  let error = user.validateSync();
+  if (error) {
+    return res.status(400).send(error);
+  }
+
   const salt = await bcrypt.genSalt(10);
   const hashPassword = await bcrypt.hash(req.body.password, salt);
 
-  const user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: hashPassword,
-  });
+  user.password = hashPassword;
+  error = user.validateSync();
+  if (error) {
+    return res.status(400).send(error);
+  }
 
   user.save();
   res.json({ user });

@@ -1,20 +1,23 @@
 const mongoose = require("mongoose");
+require("mongoose-type-email");
+const Schema = mongoose.Schema;
 
-const User = mongoose.Schema({
+const User = new Schema({
   name: {
     type: String,
+    trim: true,
     required: true,
   },
   email: {
     type: String,
+    lowercase: true,
+    trim: true,
     required: true,
-    min: 6,
   },
   password: {
     type: String,
     required: true,
-    min: 4,
-    max: 32,
+    minLength: 4,
   },
   date: {
     type: Date,
